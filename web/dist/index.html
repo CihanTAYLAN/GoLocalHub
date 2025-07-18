@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Go-LocalHub</title>
+		<script type="module">
+			async function load() {
+				const res = await fetch("/metrics");
+				const data = await res.json();
+				document.body.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+			}
+			load();
+		</script>
+	</head>
+	<body>
+		<h1>Go-LocalHub</h1>
+		<p>This is a simple Go application that collects metrics about the application.</p>
+		<p>Metrics are collected every second and sent to the server.</p>
+		<p>Metrics are displayed in the browser.</p>
+		<p>Metrics are displayed in the browser.</p>
+	</body>
+</html>
