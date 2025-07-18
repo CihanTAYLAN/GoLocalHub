@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Todos</title>
+		<script>
+			function load() {
+				fetch("/todos")
+					.then((r) => r.json())
+					.then((data) => {
+						listEl.innerHTML = data
+							.map(
+								(t) => `
+			     <li>
+			       ${t?.completed ? "[x]" : ""}
+			       ${t?.priority ? `(${t?.priority})` : ""}
+			       ${t?.text}
+			       ${t?.contexts && t?.contexts?.join(" ")} ${t?.projects && t?.projects?.join(" ")}
+						</li>`
+							)
+							.join("");
+					});
+			}
+			function add() {
+				fetch("/todos/add", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ text: txt.value }),
+				});
+				load();
+				txt.value = "";
+			}
+			load();
+		</script>
+	</head>
+	<body>
+		<h2>Todos</h2>
+		<ul id="listEl"></ul>
+
+		<h3>Add</h3>
+		<input
+			id="txt"
+			placeholder="(B) Pay bills @home"
+		/>
+
+		<button onclick="add()">Add</button>
+	</body>
+</html>
