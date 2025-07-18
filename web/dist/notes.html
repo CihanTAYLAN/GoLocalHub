@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Notes</title>
+		<script>
+			function openNote(slug) {
+				fetch("/notes?slug=" + slug)
+					.then((r) => r.json())
+					.then((data) => {
+						slugInp.value = data.slug;
+						titleInp.value = data.title;
+						bodyInp.value = data.body;
+					});
+			}
+
+			function load() {
+				const list = fetch("/notes")
+					.then((r) => r.json())
+					.then((data) => {
+						listEl.innerHTML = data.map((n) => `<li><a href="#" onclick="openNote('${n.slug}')">${n.title}</a></li>`).join("");
+					});
+			}
+
+			function save() {
+				fetch("/notes/save", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ slug: slugInp.value, title: titleInp.value, body: bodyInp.value }),
+				}).then(() => {
+					load();
+				});
+			}
+			load();
+		</script>
+	</head>
+	<body>
+		<h2>Notes</h2>
+		<ul id="listEl"></ul>
+
+		<h3>Edit / New</h3>
+		<input
+			id="slugInp"
+			type="hidden"
+		/>
+		<input
+			id="titleInp"
+			placeholder="title"
+		/>
+		<br />
+		<textarea
+			id="bodyInp"
+			rows="10"
+			cols="50"
+		></textarea>
+		<br />
+		<button onclick="save()">Save</button>
+	</body>
+</html>
